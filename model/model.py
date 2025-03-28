@@ -1,7 +1,7 @@
 
 from .model_backbone import BITNETBackbone
 from .fuse import BiFPN
-from .detect import DetectionHead
+from .detect import ObjectDetectionHead
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -17,7 +17,7 @@ class BiTNet(nn.Module):
         self.bifpn = BiFPN(in_channels_list=[32, 64, 128, 256], out_channels=128)
 
         # 3) Detection Head - Remove the num_anchors parameter
-        self.head = DetectionHead(in_channels=128, num_classes=num_classes)
+        self.head = ObjectDetectionHead(in_channels=128, num_classes=num_classes)
 
     def forward(self, x):
         # Extract multi-scale features from backbone
@@ -28,9 +28,9 @@ class BiTNet(nn.Module):
         fused_feats = self.bifpn(bifpn_inputs)
 
         # Modified to match your DetectionHead implementation
-        segmentation_output = self.head(fused_feats)
+        cls_logits, bbox_reg , obj_logits = self.head(fused_feats[0])
 
-        return segmentation_output
+        return cls_logits, bbox_reg,obj_logits
     
 
 

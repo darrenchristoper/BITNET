@@ -46,7 +46,9 @@ def plot_map(map_values, val_map_values=None, test_map=None):
     plt.tight_layout()
     plt.show()
 
-def plot_map50(map_values):
+
+
+def plot_map5095(map_values50,map_values5095):
     """
     Plot mean Average Precision (mAP) over epochs.
 
@@ -58,41 +60,10 @@ def plot_map50(map_values):
     plt.figure(figsize=(10, 6))
 
     # Plot training mAP
-    epochs = range(1, len(map_values) + 1)
-    plt.plot(epochs, map_values, 'b-', label='mAP@50', marker='o')
+    epochs = range(1, len(map_values50) + 1)
+    plt.plot(epochs, map_values50, 'b-', label='mAP@50 ', marker='o')
 
-   
-
-    plt.title('Mean Average Precision (mAP) over Training ')
-    plt.xlabel('Epochs')
-    plt.ylabel('mAP')
-    plt.ylim([0, 1.0])  # mAP is typically between 0 and 1
-    plt.grid(True)
-    plt.legend()
-
-    # Add data points values as text
-    for i, j in enumerate(map_values):
-        plt.annotate(f'{j:.3f}', (epochs[i], j), textcoords="offset points",
-                    xytext=(0,10), ha='center')
-
-    plt.tight_layout()
-    plt.show()
-
-def plot_map5095(map_values):
-    """
-    Plot mean Average Precision (mAP) over epochs.
-
-    Parameters:
-    map_values (list): List of mAP values for training data across epochs
-    val_map_values (list, optional): List of mAP values for validation data across epochs
-    test_map (float, optional): Final test mAP value to display as a horizontal line
-    """
-    plt.figure(figsize=(10, 6))
-
-    # Plot training mAP
-    epochs = range(1, len(map_values) + 1)
-    plt.plot(epochs, map_values, 'b-', label='mAP@50:95 ', marker='o')
-
+    plt.plot(epochs, map_values5095, 'b-', label='mAP@50:95 ', marker='x')
     
 
     plt.title('Mean Average Precision (mAP) over Training ')
@@ -103,25 +74,31 @@ def plot_map5095(map_values):
     plt.legend()
 
     # Add data points values as text
-    for i, j in enumerate(map_values):
+    for i, j in enumerate(map_values50):
         plt.annotate(f'{j:.3f}', (epochs[i], j), textcoords="offset points",
                     xytext=(0,10), ha='center')
 
     plt.tight_layout()
     plt.show()
 
-
-def plot_losses(train_losses, val_losses=None):
+def plot_losses(total_losses, local_losses, obj_losses, class_losses):
     plt.figure(figsize=(10, 5))
-    plt.plot(train_losses, label='Training Loss', color='blue')
-    if val_losses:
-        plt.plot(val_losses, label='Validation Loss', color='red')
+    plt.plot(total_losses, label='Total Loss', color='blue')
+    plt.plot(local_losses, label='Localization Loss', color='red')
+    plt.plot(obj_losses, label='Objectness Loss', color='green')
+    plt.plot(class_losses, label='Classification Objectness Loss', color='orange')
     plt.xlabel('Epochs')
     plt.ylabel('Loss')
-    plt.title('Training and Validation Loss')
+    plt.title('Losses over training')
     plt.legend()
     plt.grid(True)
     plt.show()
+
+    
+
+    
+    
+    
 # Function to evaluate model on test dataset
 def evaluate_model(model, test_loader, device, criterion=None, train_losses=None, val_losses=None):
     model.eval()
